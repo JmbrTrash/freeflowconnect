@@ -8,17 +8,13 @@
 <script>
 import { mapActions } from 'vuex'
 
-import apiService from './../services/apiService'
+// import apiService from './../services/apiService'
 
 export default {
   data: () => ({}),
   computed: {},
   mounted () {
     this.setCurrentRoom(null)
-    apiService.getRooms().then(response => {
-      console.log(response.data)
-      this.setRooms(response.data)
-    })
   },
   methods: {
     ...mapActions(['setCurrentRoom', 'setRooms'])

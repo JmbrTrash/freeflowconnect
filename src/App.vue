@@ -3,7 +3,7 @@
     <v-app-bar app v-if="$route.name != 'home'">
       <v-toolbar-title class="headline">
         <div v-if="currentRoom">
-          <span>{{currentRoom}}</span>
+          <span>{{currentRoom.name}}</span>
         </div>
         <div v-else>
           <span>FreeFlow</span>
@@ -25,8 +25,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import apiService from './services/apiService'
 import RoomList from './components/RoomList'
-
 export default {
   name: 'App',
   components: {
@@ -37,10 +37,17 @@ export default {
     ...mapGetters(['currentRoom'])
   },
   methods: {
-    ...mapActions(['setCurrentRoom'])
+    ...mapActions(['setCurrentRoom', 'setUserName', 'setRooms'])
   },
   mounted () {
+    apiService.getRooms().then(response => {
+      console.log('traag')
+      console.log(response.data)
+      this.setRooms(response.data)
+    })
+    console.log('snel')
     this.setCurrentRoom(null)
+    this.setUserName(Math.round(Math.random() * 100))
   }
 }
 </script>
