@@ -13,7 +13,6 @@ export default new Vuex.Store({
   },
   mutations: {
     setCurrentRoom (state, room) {
-      console.log('CURRENT ROOM SET', room)
       if (room == null) {
         state.currentRoom = { name: null, users: [] }
         return
@@ -25,10 +24,7 @@ export default new Vuex.Store({
     },
     addUserToCurrentRoom (state, user) {
       if (state.currentRoom != null) {
-        console.log('adding user to current room', JSON.stringify(state.currentRoom), user)
         state.currentRoom.users.push(user)
-
-        console.log('Done adding user to current room', JSON.stringify(state.currentRoom))
       }
     },
     removeUserFromCurrentRoom (state, user) {
@@ -49,7 +45,6 @@ export default new Vuex.Store({
       if (room != null) {
         // socketService.emit('joinRoom', { room, user: "alex" })
         apiService.getRoom(room).then(response => {
-          console.log('HERE: ', response.data)
           context.commit('setCurrentRoom', { name: room, ...response.data })
         })
       } else {
@@ -63,11 +58,9 @@ export default new Vuex.Store({
       context.commit('setUserName', userName)
     },
     SOCKET_userJoined: (context, data) => {
-      console.log(data)
       context.commit('addUserToCurrentRoom', data.user)
     },
     SOCKET_userLeft: (context, data) => {
-      console.log(data)
       context.commit('removeUserFromCurrentRoom', data.user)
     }
 

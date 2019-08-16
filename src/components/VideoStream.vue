@@ -13,15 +13,17 @@
       :width="width"
       :height="height"
     >
-      <v-img
+      <!-- <v-img
         v-if="media"
         class="white--text"
         height="200px"
         src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-      >
-      </v-img>
-      <v-card-title v-else>I'm a title</v-card-title>
+      > -->
+      <!-- </v-img> -->
+      <!-- <v-card-title v-else>I'm a title</v-card-title> -->
 
+      <video v-if="user=='ikke'" id="ikke" :width="width" :height="height" autoplay></video>
+      <video v-else id="denanderen" :width="width" :height="height" autoplay></video>
       <v-card-text>{{user}}</v-card-text>
 
     </v-card>
