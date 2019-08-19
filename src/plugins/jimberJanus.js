@@ -51,43 +51,49 @@ export class JimberJanus {
 
   createReceiver (janus, receiverip, secret, pin) {
     var streamingPlugin = null
+
     return new Promise((resolve, reject) => {
-      janus.attach(
-        {
-          plugin: 'janus.plugin.videoroom',
-          success: function (pluginHandle) {
-            streamingPlugin = pluginHandle
-            streamingPlugin.send({
-              message: { 'request': 'list', message: { 'audio': true, 'video': true } },
-              error: (err) => {
-                console.error(err)
-              },
-              success: (data) => {
-                console.log(data)
+      janus.attach({
+        plugin: 'janus.plugin.videoroom',
+        success: function (pluginHandle) {
+          streamingPlugin = pluginHandle
+          streamingPlugin.send({
+            message: {
+              'request': 'list',
+              message: {
+                'audio': true,
+                'video': true
               }
-            })
-            resolve(streamingPlugin)
-          },
-          error: function (error) {
-            console.error('  -- Error attaching plugin...', error)
-          },
-          onmessage: function (msg, jsep) {
-            Janus.debug(' ::: Got a message :::')
-            Janus.debug(msg)
-            if (jsep !== undefined && jsep !== null) {
-              Janus.debug('Handling SDP as well...')
-              Janus.debug(jsep)
-              streamingplugin.handleRemoteJsep({ jsep: jsep })
+            },
+            error: (err) => {
+              console.error(err)
+            },
+            success: (data) => {
+              console.log(data)
             }
-          },
-          slowLink: function (uplink, nacks) {
-          },
-          oncleanup: function () {
-          },
-          onlocalstream: function (stream) {
-            console.log('test')
+          })
+          resolve(streamingPlugin)
+        },
+        error: function (error) {
+          console.error('  -- Error attaching plugin...', error)
+        },
+        onmessage: function (msg, jsep) {
+          Janus.debug(' ::: Got a message :::')
+          Janus.debug(msg)
+          if (jsep !== undefined && jsep !== null) {
+            Janus.debug('Handling SDP as well...')
+            Janus.debug(jsep)
+            streamingPlugin.handleRemoteJsep({
+              jsep: jsep
+            })
           }
-        })
+        },
+        slowLink: function (uplink, nacks) {},
+        oncleanup: function () {},
+        onlocalstream: function (stream) {
+          console.log('test')
+        }
+      })
     })
   }
 
@@ -152,21 +158,44 @@ export class JimberJanus {
               if (document.getElementById('ikke').srcObject) {
                 answerObject.stream = document.getElementById('ikke').srcObject
               }
+            })
+          } catch (error) {
+            console.log(error)
+          }
 
-              streaming.createAnswer(answerObject)
+          resolve(streaming)
+        },
+        error: function (error) {
+          Janus.error('  -- Error attaching plugin... ', error)
+        },
+        onmessage: function (msg, jsep) {
+          console.log('Streaming plugin message', msg, jsep)
+          if (jsep !== undefined && jsep !== null) {
+            var answerObject = {
+              jsep: jsep,
+              media: {
+                audio: false,
+                video: false,
+                audioSend: false,
+                videoSend: false
+              },
+              success: function (jsep) {
+                var body = {
+                  'request': 'start'
+                }
+                streaming.send({
+                  'message': body,
+                  'jsep': jsep
+                })
+              },
+              error: function (error) {
+                Janus.error('WebRTC error:', error)
+              },
+              stream: document.getElementById('ikke').srcObject
             }
-          },
-          slowLink: function (uplink, nacks) {
-          },
-          oncleanup: function () {
-          },
-          iceState: function (state) {
-            if (state === 'checking' && isSafari && !window.navigator.userAgent.match(/iPad/i) && !window.navigator.userAgent.match(/iPhone/i)) {
-              navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then((stream) => {
-                console.log('got stream in safari')
-              }).catch(e => {
-                console.log("couldn't get stream in safari", e)
-              })
+
+            if (document.getElementById('ikke').srcObject) {
+              answerObject.stream = document.getElementById('ikke').srcObject
             }
             console.log('iceState ', state)
           },
@@ -187,12 +216,37 @@ export class JimberJanus {
                 console.log('success request', data)
               }
             })
-          },
-          onremotestream: function (stream) {
-            console.log('onremote')
-            // We have a remote stream (working PeerConnection!) to display
           }
-        })
+          console.log('iceState ', state)
+        },
+        mediaState: function (medium, on) {
+          console.log('media state')
+        },
+        webrtcState: function (on) {},
+        onlocalstream: function (stream) {
+          console.log('onlocal', stream)
+          document.getElementById('denanderen').srcObject = stream
+          streaming.send({
+            message: {
+              'request': 'list',
+              message: {
+                'audio': true,
+                'video': true
+              }
+            },
+            error: (err) => {
+              console.error('err request', err)
+            },
+            success: (data) => {
+              console.log('success request', data)
+            }
+          })
+        },
+        onremotestream: function (stream) {
+          console.log('onremote')
+          // We have a remote stream (working PeerConnection!) to display
+        }
+      })
     })
   }
 
@@ -236,7 +290,10 @@ export class JimberJanus {
                 }, switchDelay)
                 if (!vm.$store.getters.someoneScreenSharing) {
                   vm.$store.dispatch('isMakingNoise', id)
-                  vm.$store.dispatch('setBigScreenStream', { desktop: desktop, stream: stream })
+                  vm.$store.dispatch('setBigScreenStream', {
+                    desktop: desktop,
+                    stream: stream
+                  })
                 }
               }
             }
@@ -245,7 +302,10 @@ export class JimberJanus {
       }
       if (!vm.$store.getters.someoneScreenSharing) {
         vm.$store.dispatch('isMakingNoise', id)
-        vm.$store.dispatch('setBigScreenStream', { desktop: desktop, stream: stream })
+        vm.$store.dispatch('setBigScreenStream', {
+          desktop: desktop,
+          stream: stream
+        })
       }
       if (document.getElementById(id)) {
         Janus.attachMediaStream(document.getElementById(id), stream)
