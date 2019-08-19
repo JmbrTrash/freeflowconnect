@@ -11,7 +11,7 @@ var isWebRtcSupported = function () {
 
 var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
-export default class JimberJanus {
+export class JimberJanus {
   constructor () {
     Janus.init({
       debug: false,
