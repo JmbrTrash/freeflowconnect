@@ -17,7 +17,7 @@ var isWebRtcSupported = function () {
 var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export class JimberJanus {
-  constructor () {
+  constructor() {
     Janus.init({
       debug: false,
       callback: function () {
@@ -26,7 +26,7 @@ export class JimberJanus {
     })
   }
 
-  createJanus (serverip) {
+  createJanus(serverip) {
     // var server = `https://${serverip}:8088/janus`
     var server = `http://localhost:8088/janus`
     // var server = `https://janus.conf.meetecho.com/janus`
@@ -49,7 +49,7 @@ export class JimberJanus {
     })
   }
 
-  createReceiver (janus, receiverip, secret, pin) {
+  createReceiver(janus, receiverip, secret, pin) {
     var streamingPlugin = null
 
     return new Promise((resolve, reject) => {
@@ -88,8 +88,8 @@ export class JimberJanus {
             })
           }
         },
-        slowLink: function (uplink, nacks) {},
-        oncleanup: function () {},
+        slowLink: function (uplink, nacks) { },
+        oncleanup: function () { },
         onlocalstream: function (stream) {
           console.log('test')
         }
@@ -97,7 +97,7 @@ export class JimberJanus {
     })
   }
 
-  createStreamPlugin (janus) {
+  createStreamPlugin(janus) {
     return new Promise((resolve, reject) => {
       var streaming = null
       janus.attach(
@@ -158,57 +158,77 @@ export class JimberJanus {
               if (document.getElementById('ikke').srcObject) {
                 answerObject.stream = document.getElementById('ikke').srcObject
               }
-            })
-          } catch (error) {
-            console.log(error)
-          }
-
-          resolve(streaming)
-        },
-        error: function (error) {
-          Janus.error('  -- Error attaching plugin... ', error)
-        },
-        onmessage: function (msg, jsep) {
-          console.log('Streaming plugin message', msg, jsep)
-          if (jsep !== undefined && jsep !== null) {
-            var answerObject = {
-              jsep: jsep,
-              media: {
-                audio: false,
-                video: false,
-                audioSend: false,
-                videoSend: false
-              },
-              success: function (jsep) {
-                var body = {
-                  'request': 'start'
-                }
-                streaming.send({
-                  'message': body,
-                  'jsep': jsep
-                })
-              },
-              error: function (error) {
-                Janus.error('WebRTC error:', error)
-              },
-              stream: document.getElementById('ikke').srcObject
             }
+          },
+          error: function (error) {
+            Janus.error('  -- Error attaching plugin... ', error)
+          },
+          onmessage: function (msg, jsep) {
+            console.log('Streaming plugin message', msg, jsep)
+            if (jsep !== undefined && jsep !== null) {
+              var answerObject = {
+                jsep: jsep,
+                media: {
+                  audio: false,
+                  video: false,
+                  audioSend: false,
+                  videoSend: false
+                },
+                success: function (jsep) {
+                  var body = {
+                    'request': 'start'
+                  }
+                  streaming.send({
+                    'message': body,
+                    'jsep': jsep
+                  })
+                },
+                error: function (error) {
+                  Janus.error('WebRTC error:', error)
+                },
+                stream: document.getElementById('ikke').srcObject
+              }
 
-            if (document.getElementById('ikke').srcObject) {
-              answerObject.stream = document.getElementById('ikke').srcObject
+              if (document.getElementById('ikke').srcObject) {
+                answerObject.stream = document.getElementById('ikke').srcObject
+              }
+              console.log('iceState ', state)
+            },
+            mediaState: function (medium, on) {
+              console.log('media state')
+            },
+            webrtcState: function (on) {
+            },
+            onlocalstream: function (stream) {
+              console.log('onlocal', stream)
+              document.getElementById('denanderen').srcObject = stream
+              streaming.send({
+                message: { 'request': 'list', message: { 'audio': true, 'video': true } },
+                error: (err) => {
+                  console.error('err request', err)
+                },
+                success: (data) => {
+                  console.log('success request', data)
+                }
+              })
             }
             console.log('iceState ', state)
           },
           mediaState: function (medium, on) {
             console.log('media state')
           },
-          webrtcState: function (on) {
-          },
+          webrtcState: function (on) { },
           onlocalstream: function (stream) {
             console.log('onlocal', stream)
             document.getElementById('denanderen').srcObject = stream
             streaming.send({
-              message: { 'request': 'list', message: { 'audio': true, 'video': true } },
+              message: {
+                'request': 'list',
+                message: {
+                  'audio': true,
+                  'video': true
+                }
+              },
               error: (err) => {
                 console.error('err request', err)
               },
@@ -216,41 +236,16 @@ export class JimberJanus {
                 console.log('success request', data)
               }
             })
+          },
+          onremotestream: function (stream) {
+            console.log('onremote')
+            // We have a remote stream (working PeerConnection!) to display
           }
-          console.log('iceState ', state)
-        },
-        mediaState: function (medium, on) {
-          console.log('media state')
-        },
-        webrtcState: function (on) {},
-        onlocalstream: function (stream) {
-          console.log('onlocal', stream)
-          document.getElementById('denanderen').srcObject = stream
-          streaming.send({
-            message: {
-              'request': 'list',
-              message: {
-                'audio': true,
-                'video': true
-              }
-            },
-            error: (err) => {
-              console.error('err request', err)
-            },
-            success: (data) => {
-              console.log('success request', data)
-            }
-          })
-        },
-        onremotestream: function (stream) {
-          console.log('onremote')
-          // We have a remote stream (working PeerConnection!) to display
-        }
-      })
+        })
     })
   }
 
-  getStream (streaming, id, pin, desktop) {
+  getStream(streaming, id, pin, desktop) {
     var body = { 'request': 'watch', id: parseInt(id), pin: pin }
     id = desktop ? 'bigScreen' : id
     streaming.onRemoteStream = function (stream) {
