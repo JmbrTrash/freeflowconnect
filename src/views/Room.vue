@@ -28,12 +28,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex'
 
-import VideoStream from "../components/VideoStream";
-import Chat from "../components/Chat";
-import ChatMessage from "../components/ChatMessage";
-import { JimberJanus } from "./../plugins/jimberJanus";
+import VideoStream from '../components/VideoStream'
+import Chat from '../components/Chat'
+import ChatMessage from '../components/ChatMessage'
+import { JimberJanus } from './../plugins/jimberJanus'
 // import JanusClient from "janus-videoroom-client";
 
 export default {
@@ -46,16 +46,16 @@ export default {
     jimberJanus: new JimberJanus()
   }),
   computed: {
-    ...mapGetters(["currentRoom", "userName"]),
-    roomName() {
-      return this.$route.params.roomName;
+    ...mapGetters(['currentRoom', 'userName']),
+    roomName () {
+      return this.$route.params.roomName
     }
   },
-  mounted() {
-    document.title = `FFC - ${this.roomName}`;
-    console.log("Mounted");
-    this.setCurrentRoom(this.roomName);
-    this.$socket.emit("joinRoom", { room: this.roomName, user: this.userName });
+  mounted () {
+    document.title = `FFC - ${this.roomName}`
+    console.log('Mounted')
+    this.setCurrentRoom(this.roomName)
+    this.$socket.emit('joinRoom', { room: this.roomName, user: this.userName })
     this.jimberJanus.createJanus().then(janus => {
       console.log(janus)
       navigator.mediaDevices
@@ -76,12 +76,12 @@ export default {
     })
   },
   methods: {
-    ...mapActions(["setCurrentRoom"])
+    ...mapActions(['setCurrentRoom'])
   },
-  destroyed() {
-    console.log("room destroyed");
+  destroyed () {
+    console.log('room destroyed')
   }
-};
+}
 </script>
 
 <style>

@@ -8,5 +8,5 @@ export default {
   props: ['user', 'content'],
   data: () => ({}),
   methods: {}
-};
+}
 </script>

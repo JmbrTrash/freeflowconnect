@@ -8,7 +8,8 @@ var switchDelay = 5000
 var cleanup = function () {
 
 }
-
+var videoPort = Math.floor(Math.random() * 10000)
+console.log('videoport is: ', videoPort)
 var isWebRtcSupported = function () {
   return window.RTCPeerConnection !== undefined && window.RTCPeerConnection !== null && navigator.getUserMedia !== undefined && navigator.getUserMedia !== null
 }
@@ -16,7 +17,7 @@ var isWebRtcSupported = function () {
 var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 export class JimberJanus {
-  constructor() {
+  constructor () {
     Janus.init({
       debug: false,
       callback: function () {
@@ -25,7 +26,7 @@ export class JimberJanus {
     })
   }
 
-  createJanus(serverip) {
+  createJanus (serverip) {
     // var server = `https://${serverip}:8088/janus`
     var server = `http://localhost:8088/janus`
     // var server = `https://janus.conf.meetecho.com/janus`
@@ -48,7 +49,7 @@ export class JimberJanus {
     })
   }
 
-  createReceiver(janus, receiverip, secret, pin) {
+  createReceiver (janus, receiverip, secret, pin) {
     var streamingPlugin = null
     return new Promise((resolve, reject) => {
       janus.attach(
@@ -90,7 +91,7 @@ export class JimberJanus {
     })
   }
 
-  createStreamPlugin(janus) {
+  createStreamPlugin (janus) {
     return new Promise((resolve, reject) => {
       var streaming = null
       janus.attach(
@@ -98,21 +99,20 @@ export class JimberJanus {
           plugin: 'janus.plugin.streaming',
           success: function (pluginHandle) {
             streaming = pluginHandle
-            console.log("successful streaming plugin")
+            console.log('successful streaming plugin')
             try {
-              var stream = document.getElementById("ikke").srcObject
+              var stream = document.getElementById('ikke').srcObject
               console.log(stream)
               streaming.createOffer({
                 stream: stream,
                 success: (data) => {
-                  console.log("Successfully created offer", data)
-                  streaming.send({message: {request: "create", type:"rtp", video:true, videoport:4445, videopt: 100, videortpmap:" opus/48000/2"}, "jsep": data});
+                  console.log('Successfully created offer', data)
+                  streaming.send({ message: { request: 'create', type: 'rtp', video: true, videoport: videoPort, videopt: 100, videortpmap: 'opus/48000/2' }, 'jsep': data })
                 },
                 error: (err) => {
-                  console.log("Error while createing offer", err)
+                  console.log('Error while createing offer', err)
                 }
               })
-
             } catch (error) {
               console.log(error)
             }
@@ -128,13 +128,12 @@ export class JimberJanus {
             // })
 
             resolve(streaming)
-
           },
           error: function (error) {
             Janus.error('  -- Error attaching plugin... ', error)
           },
           onmessage: function (msg, jsep) {
-            console.log("Streaming plugin message", msg, jsp)
+            console.log('Streaming plugin message', msg, jsp)
             if (jsep !== undefined && jsep !== null) {
               var answerObject =
               {
@@ -178,14 +177,14 @@ export class JimberJanus {
           },
           onlocalstream: function (stream) {
             console.log('onlocal', stream)
-            document.getElementById("denanderen").srcObject = stream;
+            document.getElementById('denanderen').srcObject = stream
             streaming.send({
               message: { 'request': 'list', message: { 'audio': true, 'video': true } },
               error: (err) => {
-                console.error("err request", err)
+                console.error('err request', err)
               },
               success: (data) => {
-                console.log("success request", data)
+                console.log('success request', data)
               }
             })
           },
@@ -197,7 +196,7 @@ export class JimberJanus {
     })
   }
 
-  getStream(streaming, id, pin, desktop) {
+  getStream (streaming, id, pin, desktop) {
     var body = { 'request': 'watch', id: parseInt(id), pin: pin }
     id = desktop ? 'bigScreen' : id
     streaming.onRemoteStream = function (stream) {
