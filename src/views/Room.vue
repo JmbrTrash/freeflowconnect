@@ -7,12 +7,6 @@
         <video style="margin: 5px;" id="participant2" width="250" height="250" autoplay></video>
         <video style="margin: 5px;" id="participant3" width="250" height="250" autoplay></video>
         <video style="margin: 5px;" id="participant4" width="250" height="250" autoplay></video>
-        <!-- <video style="margin: 5px;" id="participant5" width="250" height="250" autoplay></video>
-        <video style="margin: 5px;" id="participant6" width="250" height="250" autoplay></video>
-        <video style="margin: 5px;" id="participant7" width="250" height="250" autoplay></video>
-        <video style="margin: 5px;" id="participant8" width="250" height="250" autoplay></video>
-        <video style="margin: 5px;" id="participant9" width="250" height="250" autoplay></video>
-        <video style="margin: 5px;" id="participant10" width="250" height="250" autoplay></video> -->
       </div>
     </v-layout>
       <v-btn v-on:click="leave">Disconnect from room</v-btn>
@@ -28,8 +22,6 @@ import JanusWrapper from '../plugins/janus.videoroom'
 
 export default {
   components: {
-    // VideoStream,
-    // Chat
   },
   data: () => ({
     janus: null
@@ -44,7 +36,7 @@ export default {
     document.title = `FFC - ${this.roomName}`
     console.log('Mounted')
     this.setCurrentRoom(this.roomName)
-
+    this.$socket.emit('joinRoom', { room: this.roomName, user: this.userName })
     this.janus = new JanusWrapper(this.roomName)
     console.log(this.janus)
   },
