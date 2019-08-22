@@ -50,17 +50,17 @@ export default {
   },
   methods: {
     leave: function () {
-      console.log("We are going to attempt to disconnect.")
+      console.log('We are going to attempt to disconnect.')
       this.janus.disconnect()
       // this.janus.sfutest.hangup()
     },
     join: function () {
-      console.log("We are going to attempt to connect.")
+      console.log('We are going to attempt to connect.')
       this.janus.connect(this.roomName)
       // this.janus.sfutest.hangup()
     },
     showUsers: function () {
-      console.log("showUsers in room ", this.roomName)
+      console.log('showUsers in room ', this.roomName)
       this.janus.showUsers(this.roomName)
     },
     ...mapActions(['setCurrentRoom'])

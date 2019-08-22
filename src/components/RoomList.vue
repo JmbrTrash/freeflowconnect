@@ -62,12 +62,12 @@ export default {
     ...mapActions(['setCurrentRoom']),
     changeRoom (room) {
       if (this.currentRoom.name == room) {
-        console.log("Yeah, not happening... ")
+        console.log('Yeah, not happening... ')
         return
       }
 
       if (document.getElementById('myvideo') != null) {
-        document.getElementById('myvideo').srcObject = null      
+        document.getElementById('myvideo').srcObject = null
       }
 
       for (var i = 1; i <= 10; i++) {

@@ -31,12 +31,12 @@
 
 <script>
 
-import { mapActions, mapGetters } from "vuex"
+import { mapActions, mapGetters } from 'vuex'
 
-import VideoStream from "../components/VideoStream"
-import Chat from "../components/Chat"
-import ChatMessage from "../components/ChatMessage"
-import JanusWrapper from "../plugins/janus.videoroom"
+import VideoStream from '../components/VideoStream'
+import Chat from '../components/Chat'
+import ChatMessage from '../components/ChatMessage'
+import JanusWrapper from '../plugins/janus.videoroom'
 
 export default {
   components: {
@@ -46,22 +46,22 @@ export default {
   data: () => ({
   }),
   computed: {
-    ...mapGetters(["currentRoom", "userName"]),
-    roomName() {
+    ...mapGetters(['currentRoom', 'userName']),
+    roomName () {
       return this.$route.params.roomName
     }
   },
-  mounted() {
+  mounted () {
     document.title = `FFC - ${this.roomName}`
-    console.log("Mounted")
+    console.log('Mounted')
     this.setCurrentRoom(this.roomName)
     var janus = new JanusWrapper(this.roomName)
   },
   methods: {
-    ...mapActions(["setCurrentRoom"]),
+    ...mapActions(['setCurrentRoom'])
   },
-  destroyed() {
-    console.log("room destroyed");
+  destroyed () {
+    console.log('room destroyed')
   }
 }
 
