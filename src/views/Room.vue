@@ -1,87 +1,74 @@
 <template>
   <v-container>
-    <!-- {{currentRoom.name}} -->
     <v-layout>
-      <!-- <div v-for="(peer, p) in currentRoom.users" :key="p">
-        <VideoStream :user="peer" />
-      </div>-->
-      <VideoStream :user="`ikke`" />
-      <VideoStream :user="`denanderen`" />
-      <!-- <Chat/> -->
-      <!-- <v-container absolute fluid class="pa-0" fill-height>
-          <v-layout column fill-height justify-space-between>
-            <v-flex class="scroll" v-autoscroll>
-              <ChatMessage :message="message" v-for="(message, index) in messages" :key="index"
-                :mine="message.from == user.name" />
-            </v-flex>
-            <div>
-              <v-layout>
-                <v-textarea @keydown.enter.exact.prevent @keyup.enter.exact="checkAndSendMessage" :key="chatMessageKey"
-                  autofocus label="Message" box v-model="message" append-icon="send" @click:append="checkAndSendMessage"
-                  persistent-hint :hint="randomHint" rows="1" auto-grow />
-              </v-layout>
-            </div>
-          </v-layout>
-      </v-container>-->
+      <div style="width: 100%;display: block;">
+        <video style="margin: 5px;" id="myvideo" width="250" height="250" autoplay></video>
+        <video style="margin: 5px;" id="participant1" width="250" height="250" autoplay></video>
+        <video style="margin: 5px;" id="participant2" width="250" height="250" autoplay></video>
+        <video style="margin: 5px;" id="participant3" width="250" height="250" autoplay></video>
+        <video style="margin: 5px;" id="participant4" width="250" height="250" autoplay></video>
+        <!-- <video style="margin: 5px;" id="participant5" width="250" height="250" autoplay></video>
+        <video style="margin: 5px;" id="participant6" width="250" height="250" autoplay></video>
+        <video style="margin: 5px;" id="participant7" width="250" height="250" autoplay></video>
+        <video style="margin: 5px;" id="participant8" width="250" height="250" autoplay></video>
+        <video style="margin: 5px;" id="participant9" width="250" height="250" autoplay></video>
+        <video style="margin: 5px;" id="participant10" width="250" height="250" autoplay></video> -->
+      </div>
     </v-layout>
+      <v-btn v-on:click="leave">Disconnect from room</v-btn>
+      <v-btn v-on:click="join">Connect to room</v-btn>
+      <v-btn v-on:click="showUsers">Show users in janus room</v-btn>
   </v-container>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters } from 'vuex'
 
-import VideoStream from "../components/VideoStream";
-import Chat from "../components/Chat";
-import ChatMessage from "../components/ChatMessage";
-import { JimberJanus } from "./../plugins/jimberJanus";
-// import JanusClient from "janus-videoroom-client";
+import JanusWrapper from '../plugins/janus.videoroom'
 
 export default {
   components: {
-    VideoStream,
-    Chat
+    // VideoStream,
+    // Chat
   },
   data: () => ({
-    // peers: [{ name: 'badjas' }, { name: 'cunt' }, { name: 'singlecore' }]
-    jimberJanus: new JimberJanus()
+    janus: null
   }),
   computed: {
-    ...mapGetters(["currentRoom", "userName"]),
-    roomName() {
-      return this.$route.params.roomName;
+    ...mapGetters(['currentRoom', 'userName']),
+    roomName () {
+      return this.$route.params.roomName
     }
   },
-  mounted() {
-    document.title = `FFC - ${this.roomName}`;
-    console.log("Mounted");
-    this.setCurrentRoom(this.roomName);
-    this.$socket.emit("joinRoom", { room: this.roomName, user: this.userName });
-    this.jimberJanus.createJanus().then(janus => {
-      console.log(janus)
-      navigator.mediaDevices
-        .getUserMedia({ audio: true, video: true })
-        .then(stream => {
-          console.log('got stuff', stream)
-          var hmm = document.getElementById('ikke')
-          hmm.srcObject = stream
+  mounted () {
+    document.title = `FFC - ${this.roomName}`
+    console.log('Mounted')
+    this.setCurrentRoom(this.roomName)
 
-          this.jimberJanus.createStreamPlugin(janus).then(handle => {
-            console.log('created', handle)
-          })
-        })
-
-      // this.jimberJanus.createStreamPlugin(janus).then( receiver => {
-      //   console.log(receiver)
-      // });
-    })
+    this.janus = new JanusWrapper(this.roomName)
+    console.log(this.janus)
   },
   methods: {
-    ...mapActions(["setCurrentRoom"])
+    leave: function () {
+      console.log("We are going to attempt to disconnect.")
+      this.janus.disconnect()
+      // this.janus.sfutest.hangup()
+    },
+    join: function () {
+      console.log("We are going to attempt to connect.")
+      this.janus.connect(this.roomName)
+      // this.janus.sfutest.hangup()
+    },
+    showUsers: function () {
+      console.log("showUsers in room ", this.roomName)
+      this.janus.showUsers(this.roomName)
+    },
+    ...mapActions(['setCurrentRoom'])
   },
-  destroyed() {
-    console.log("room destroyed");
+  destroyed () {
+    console.log('room destroyed')
   }
-};
+}
 </script>
 
 <style>

@@ -1,7 +1,7 @@
 <template>
   <span>
     <!-- <h1>Welcome to FreeFlowConnect</h1> -->
-    <iframe src="https://openly.live/" frameborder="0" width=100% height="99%"></iframe>
+    <!-- <iframe src="https://openly.live/" frameborder="0" width=100% height="99%"></iframe> -->
   </span>
 </template>
 

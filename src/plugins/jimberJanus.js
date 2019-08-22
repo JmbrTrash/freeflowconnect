@@ -103,26 +103,20 @@ export class JimberJanus {
           try {
             var stream = document.getElementById('ikke').srcObject
             console.log(stream)
-            streaming.createOffer({
-              stream: stream,
-              success: (data) => {
-                console.log('Successfully created offer', data)
-                streaming.send({
-                  message: {
-                    request: 'create',
-                    type: 'rtp',
-                    video: true,
-                    videoport: 4445,
-                    videopt: 100,
-                    videortpmap: ' opus/48000/2'
-                  },
-                  'jsep': data
-                })
-              },
-              error: (err) => {
-                console.log('Error while createing offer', err)
-              }
-            })
+            // streaming.createOffer({
+            //   stream: stream,
+            //   success: (data) => {
+            //     console.log('Successfully created offer', data)
+            //     var tmp = { 'request': 'create', 'description': 'pls work' }
+            //     streaming.send({
+            //       message: tmp,
+            //       'jsep': data
+            //     })
+            //   },
+            //   error: (err) => {
+            //     console.log('Error while createing offer', err)
+            //   }
+            // })
           } catch (error) {
             console.log(error)
           }
