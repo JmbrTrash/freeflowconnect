@@ -1,17 +1,31 @@
 <template>
-  <v-container>
+  <v-container fluid>
+    <v-row>
+      <v-col md="10">
+        hi
+      </v-col>
+      <v-col md="2">
+        <Chat :roomName="roomName" />
+      </v-col>
+    </v-row>
     <v-layout>
       <div style="width: 100%;display: block;">
         <video style="margin: 5px;" id="myvideo" width="250" height="250" autoplay></video>
-        <video style="margin: 5px;" id="participant1" width="250" height="250" autoplay></video>
-        <video style="margin: 5px;" id="participant2" width="250" height="250" autoplay></video>
-        <video style="margin: 5px;" id="participant3" width="250" height="250" autoplay></video>
-        <video style="margin: 5px;" id="participant4" width="250" height="250" autoplay></video>
+        <video style="margin: 5px;" id="participant1" width="250" height="250" autoplay hidden></video>
+        <video style="margin: 5px;" id="participant2" width="250" height="250" autoplay hidden></video>
+        <video style="margin: 5px;" id="participant3" width="250" height="250" autoplay hidden></video>
+        <video style="margin: 5px;" id="participant4" width="250" height="250" autoplay hidden></video>
+        <video style="margin: 5px;" id="participant5" width="250" height="250" autoplay hidden></video>
+        <video style="margin: 5px;" id="participant6" width="250" height="250" autoplay hidden></video>
+        <video style="margin: 5px;" id="participant7" width="250" height="250" autoplay hidden></video>
+        <video style="margin: 5px;" id="participant8" width="250" height="250" autoplay hidden></video>
+        <video style="margin: 5px;" id="participant9" width="250" height="250" autoplay hidden></video>
+        <video style="margin: 5px;" id="participant10" width="250" height="250" autoplay hidden></video>
       </div>
     </v-layout>
-      <v-btn v-on:click="leave">Disconnect from room</v-btn>
+      <!-- <v-btn v-on:click="leave">Disconnect from room</v-btn>
       <v-btn v-on:click="join">Connect to room</v-btn>
-      <v-btn v-on:click="showUsers">Show users in janus room</v-btn>
+      <v-btn v-on:click="showUsers">Show users in janus room</v-btn> -->
   </v-container>
 </template>
 
@@ -19,9 +33,11 @@
 import { mapActions, mapGetters } from 'vuex'
 
 import JanusWrapper from '../plugins/janus.videoroom'
+import Chat from '../components/Chat'
 
 export default {
   components: {
+    Chat
   },
   data: () => ({
     janus: null

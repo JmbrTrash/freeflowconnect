@@ -15,6 +15,9 @@ export default {
   leaveRoom (name) {
     this.emit('leaveRoom', name)
   },
+  msg (message) {
+    this.emit('msg', message)
+  },
   getUser (name) {
     // this.emit("getUser", name)
   },

@@ -7,14 +7,35 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    currentRoom: { name: null, users: [] },
+    currentRoom: {
+      name: null,
+      users: []
+    },
     rooms: {},
-    userName: null
+    userName: null,
+    messages: [{
+      user: 'Mathias',
+      timestamp: '11:30:00',
+      message: 'Hello world'
+    },
+    {
+      user: 'Alex',
+      timestamp: '03:45:00',
+      message: 'Hello bunnies'
+    },
+    {
+      user: 'Jelle',
+      timestamp: '07:30:00',
+      message: 'Hello onderdanen'
+    }]
   },
   mutations: {
     setCurrentRoom (state, room) {
       if (room == null) {
-        state.currentRoom = { name: null, users: [] }
+        state.currentRoom = {
+          name: null,
+          users: []
+        }
         return
       }
       state.currentRoom = room
@@ -38,6 +59,10 @@ export default new Vuex.Store({
     },
     setUserName (state, userName) {
       state.userName = userName
+    },
+    sendMessage (state, message) {
+      console.log('Adding message to messages')
+      state.messages.push(message)
     }
   },
   actions: {
@@ -45,7 +70,10 @@ export default new Vuex.Store({
       if (room != null) {
         // socketService.emit('joinRoom', { room, user: "alex" })
         apiService.getRoom(room).then(response => {
-          context.commit('setCurrentRoom', { name: room, ...response.data })
+          context.commit('setCurrentRoom', {
+            name: room,
+            ...response.data
+          })
         })
       } else {
         context.commit('setCurrentRoom', room)
@@ -57,18 +85,26 @@ export default new Vuex.Store({
     setUserName: (context, userName) => {
       context.commit('setUserName', userName)
     },
+    sendMessage: (context, message) => {
+      context.commit('sendMessage', message)
+    },
     SOCKET_userJoined: (context, data) => {
       context.commit('addUserToCurrentRoom', data.user)
     },
     SOCKET_userLeft: (context, data) => {
       context.commit('removeUserFromCurrentRoom', data.user)
+    },
+    SOCKET_msg: (context, data) => {
+      // console.log('msg from socket received')
+      // console.log(data)
+      context.commit('sendMessage', message)
     }
-
   },
   getters: {
     currentRoom: state => state.currentRoom,
     rooms: state => state.rooms,
-    currentPeers: state => state.currentPeers,
-    userName: state => state.userName
+    currentPeers: state => state.currentPeers, // Doesn't exist?
+    userName: state => state.userName,
+    messages: state => state.messages
   }
 })

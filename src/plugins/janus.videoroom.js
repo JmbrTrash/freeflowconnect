@@ -37,6 +37,7 @@ class JimberJanusVideoRoom {
 
       instance.feeds = []
       instance.bitrateTimer = []
+      instance.participants = []
 
       instance.doSimulcast = (instance.getQueryStringValue('simulcast') === 'yes' || instance.getQueryStringValue('simulcast') === 'true')
       instance.doSimulcast2 = (instance.getQueryStringValue('simulcast2') === 'yes' || instance.getQueryStringValue('simulcast2') === 'true')
@@ -158,15 +159,11 @@ class JimberJanusVideoRoom {
             console.log('janus success')
 
             instance.janus.attach({
-              // opaqueId: 'videoroomtest-' + Janus.randomString(12),
               plugin: 'janus.plugin.videoroom',
               success: function (pluginHandle) {
-                // $('#details').remove();
                 instance.sfutest = pluginHandle
                 Janus.log('Plugin attached! (' + instance.sfutest.getPlugin() + ', id=' + instance.sfutest.getId() + ')')
                 Janus.log('  -- This is a publisher/manager')
-
-                // myroom = 9456
 
                 // Retrieve rooms
                 instance.sfutest.send({
@@ -195,7 +192,13 @@ class JimberJanusVideoRoom {
                       }
                       instance.myusername = username
                       instance.sfutest.send({
-                        'message': register
+                        'message': register,
+                        error: (err) => {
+                          console.log('Error joining room: ', err)
+                        },
+                        success: (data) => {
+                          console.log('Success join room: ', data)
+                        }
                       })
                     } else {
                       console.log('ROOM DOESNT EXIST, WE NEED TO CREATE IT!')
@@ -532,21 +535,33 @@ class JimberJanusVideoRoom {
       onremotestream: function (stream) {
         Janus.debug('Remote feed #' + remoteFeed.rfindex)
 
-        // for (var i = 1; i <= 10; i++) {
-        //   if (document.getElementById('participant' + i).srcObject == null) {
-        //     console.log('Attaching media stream ... ')
-        //     Janus.attachMediaStream(document.getElementById('participant' + i), stream)
+        console.log('@@@ Attaching media stream ... ', stream)
+
+        let participant = document.getElementById('participant1')
+        participant.removeAttribute('hidden')
+        Janus.attachMediaStream(participant, stream)
+
+        // for (let participantIndex = 1; participantIndex <= 10; participantIndex++) {
+        //   let participant = document.getElementById('participant' + participantIndex)
+
+        //   if (participant.srcObject == null) {
+        //     participant.removeAttribute('hidden')
+        //     Janus.attachMediaStream(participant, stream)
+
+        //     instance.participants.push({
+        //       id: id,
+        //       participantIndex: participantIndex
+        //     })
         //     break
         //   }
         // }
-
-        console.log('Attaching media stream ... ')
-        Janus.attachMediaStream(document.getElementById('participant1'), stream)
       },
       oncleanup: function () {
         Janus.log(' ::: Got a cleanup notification (remote feed ' + id + ') :::')
 
         document.getElementById('participant1').srcObject = null
+
+        // instance.participants.filter(participant => participant.id === id).srcObject = null
 
         if (instance.bitrateTimer[remoteFeed.rfindex] !== null && instance.bitrateTimer[remoteFeed.rfindex] !== null) {
           clearInterval(instance.bitrateTimer[remoteFeed.rfindex])

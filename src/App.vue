@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app v-if="$route.name != 'home'">
+    <v-app-bar app v-if="$route.name !== 'home'">
       <v-toolbar-title class="headline">
         <div v-if="currentRoom">
           <span>{{currentRoom.name}}</span>
@@ -16,7 +16,7 @@
       </v-btn>
     </v-app-bar>
 
-    <RoomList />
+    <!-- <RoomList /> -->
     <v-content>
       <router-view />
     </v-content>
@@ -27,6 +27,8 @@
 import { mapActions, mapGetters } from 'vuex'
 import apiService from './services/apiService'
 import RoomList from './components/RoomList'
+// import router from '../router'
+
 export default {
   name: 'App',
   components: {
