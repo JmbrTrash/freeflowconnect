@@ -209,6 +209,7 @@ class JimberJanusVideoRoom {
                           'request': 'create',
                           'room': instance.tmpId,
                           'description': instance.roomName,
+                          'publishers': 100,
                           'is_private': false
                         },
                         error: (err) => {
@@ -543,19 +544,21 @@ class JimberJanusVideoRoom {
         // console.log('@@@ Attaching media stream ... ', stream)
         // console.log('streamstreamstreamstreamstreamstreamstreamstreamstream')
         // console.log(stream)
-        if (document.getElementById(remoteFeed.id) === null) {
-          console.log('Attachting remoteFeed.id : ' + remoteFeed.id + '.')
-          let video = document.createElement('video')
-          video.id = remoteFeed.id
+
+        var video
+
+        if (document.getElementById('remotevideo' + remoteFeed.rfindex) === null) {
+          console.log('Attaching remoteFeed.id : ' + remoteFeed.id + '.')
+          video = document.createElement('video')
+          video.id = 'remotevideo' + remoteFeed.rfindex
           video.setAttribute('autoplay', 'true')
           document.getElementById('videos').appendChild(video)
-          Janus.attachMediaStream(video, stream)
         } else {
-          console.log('remoteFeed.id : ' + remoteFeed.id + ' has already been attached.')
-
-          let video = document.getElementById(remoteFeed.id)
-          Janus.attachMediaStream(video, stream)
+          console.log('remotevideo.id : ' + remoteFeed.id + ' has already been attached.')
+          video = document.getElementById('remotevideo' + remoteFeed.rfindex)
         }
+
+        Janus.attachMediaStream(video, stream)
         // let participant = document.getElementById('participant1')
         // participant.removeAttribute('hidden')
         // Janus.attachMediaStream(participant, stream)
@@ -566,7 +569,7 @@ class JimberJanusVideoRoom {
         // Janus.log(' ::: Got a cleanup notification (remote feed ' + id + ') :::')
 
         console.log(remoteFeed)
-        document.getElementById(remoteFeed.id).remove()
+        document.getElementById('remotevideo' + remoteFeed.rfindex).remove()
         remoteFeed.mystream = null
         // mystream = null;
         // document.getElementById('participant1').srcObject = null

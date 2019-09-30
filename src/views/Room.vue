@@ -9,7 +9,8 @@
       </v-col>
     </v-row>
     <v-layout>
-      <div id="videos" style="width: 100%;display: block;"></div>
+      <div id="videos" style="width: 100%;display: block;">
+      </div>
     </v-layout>
       <!-- <v-btn v-on:click="leave">Disconnect from room</v-btn>
       <v-btn v-on:click="join">Connect to room</v-btn>
