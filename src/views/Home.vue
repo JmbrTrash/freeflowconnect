@@ -11,24 +11,24 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
-  export default {
-    data: () => ({
-      asperge: null
-    }),
-    computed: {},
-    mounted () {
-      this.setCurrentRoom(null)
-    },
-    methods: {
-      ...mapActions(['setCurrentRoom', 'setRooms']),
+export default {
+  data: () => ({
+    asperge: null
+  }),
+  computed: {},
+  mounted () {
+    this.setCurrentRoom(null)
+  },
+  methods: {
+    ...mapActions(['setCurrentRoom', 'setRooms']),
 
-      createRoom(events) {
-        this.$router.push({
-          name: "room", params: {roomName: this.asperge + "-" + Math.random().toString(36).substring(2, 15).toUpperCase() }
-        })
-      }
+    createRoom (events) {
+      this.$router.push({
+        name: 'room', params: { roomName: this.asperge + '-' + Math.random().toString(36).substring(2, 15).toUpperCase() }
+      })
     }
   }
+}
 </script>

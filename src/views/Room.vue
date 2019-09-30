@@ -9,19 +9,7 @@
       </v-col>
     </v-row>
     <v-layout>
-      <div style="width: 100%;display: block;">
-        <video style="margin: 5px;" id="myvideo" width="250" height="250" autoplay></video>
-        <video style="margin: 5px;" id="participant1" width="250" height="250" autoplay hidden></video>
-        <video style="margin: 5px;" id="participant2" width="250" height="250" autoplay hidden></video>
-        <video style="margin: 5px;" id="participant3" width="250" height="250" autoplay hidden></video>
-        <video style="margin: 5px;" id="participant4" width="250" height="250" autoplay hidden></video>
-        <video style="margin: 5px;" id="participant5" width="250" height="250" autoplay hidden></video>
-        <video style="margin: 5px;" id="participant6" width="250" height="250" autoplay hidden></video>
-        <video style="margin: 5px;" id="participant7" width="250" height="250" autoplay hidden></video>
-        <video style="margin: 5px;" id="participant8" width="250" height="250" autoplay hidden></video>
-        <video style="margin: 5px;" id="participant9" width="250" height="250" autoplay hidden></video>
-        <video style="margin: 5px;" id="participant10" width="250" height="250" autoplay hidden></video>
-      </div>
+      <div id="videos" style="width: 100%;display: block;"></div>
     </v-layout>
       <!-- <v-btn v-on:click="leave">Disconnect from room</v-btn>
       <v-btn v-on:click="join">Connect to room</v-btn>

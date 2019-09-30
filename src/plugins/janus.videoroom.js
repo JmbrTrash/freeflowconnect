@@ -9,14 +9,14 @@ class JimberJanusVideoRoom {
       instance.tmpId = 0
       instance.roomName = roomName
 
-      console.log('roomName: ', roomName)
+      // console.log('roomName: ', roomName)
 
       for (var i = 0; i < roomName.length; i++) {
-        console.log(roomName.charCodeAt(i))
+        // console.log(roomName.charCodeAt(i))
         instance.tmpId = instance.tmpId + roomName.charCodeAt(i)
       }
 
-      console.log('Room name translates to id: ' + instance.tmpId)
+      // console.log('Room name translates to id: ' + instance.tmpId)
 
       instance.server = null
 
@@ -66,9 +66,9 @@ class JimberJanusVideoRoom {
         console.error('Error: ', err)
       },
       success: (data) => {
-        console.log('Successfully left room ... ', instance.tmpId)
+        // console.log('Successfully left room ... ', instance.tmpId)
 
-        console.log(instance.sfutest)
+        // console.log(instance.sfutest)
 
         instance.sfutest.detach()
 
@@ -79,7 +79,7 @@ class JimberJanusVideoRoom {
   }
 
   disconnect (roomName) {
-    console.log(instance.sfutest)
+    // console.log(instance.sfutest)
 
     var leave = {
       'request': 'leave',
@@ -92,13 +92,13 @@ class JimberJanusVideoRoom {
         console.error('Error: ', err)
       },
       success: (data) => {
-        console.log('success?')
+        // console.log('success?')
       }
     })
   }
 
   connect (roomName) {
-    console.log('Trying to join room with id ' + instance.tmpId + ' and username ' + instance.myusername)
+    // console.log('Trying to join room with id ' + instance.tmpId + ' and username ' + instance.myusername)
 
     instance = null
     new JimberJanusVideoRoom(roomName)
@@ -116,18 +116,18 @@ class JimberJanusVideoRoom {
     //     console.error('Error: ', err)
     //   },
     //   success: (data) => {
-    //     console.log('success?')
+    //     // console.log('success?')
     //   }
     // })
   }
 
   showUsers (roomName) {
-    console.log('called')
+    // console.log('called')
 
     var tmpRoomid = 0
 
     for (var i = 0; i < roomName.length; i++) {
-      console.log(roomName.charCodeAt(i))
+      // console.log(roomName.charCodeAt(i))
       tmpRoomid = tmpRoomid + roomName.charCodeAt(i)
     }
 
@@ -143,8 +143,8 @@ class JimberJanusVideoRoom {
         console.error('Error retrieving list of rooms: ', err)
       },
       success: (data) => {
-        console.log(data.list.filter(room => room.room === tmpRoomid)[0])
-        console.log(data.list.filter(room => room.room === tmpRoomid)[0].num_participants)
+        // console.log(data.list.filter(room => room.room === tmpRoomid)[0])
+        // console.log(data.list.filter(room => room.room === tmpRoomid)[0].num_participants)
       }
     })
   }
@@ -156,14 +156,14 @@ class JimberJanusVideoRoom {
         instance.janus = new Janus({
           server: 'http://localhost:8088/janus',
           success: function () {
-            console.log('janus success')
+            // console.log('janus success')
 
             instance.janus.attach({
               plugin: 'janus.plugin.videoroom',
               success: function (pluginHandle) {
                 instance.sfutest = pluginHandle
-                Janus.log('Plugin attached! (' + instance.sfutest.getPlugin() + ', id=' + instance.sfutest.getId() + ')')
-                Janus.log('  -- This is a publisher/manager')
+                // Janus.log('Plugin attached! (' + instance.sfutest.getPlugin() + ', id=' + instance.sfutest.getId() + ')')
+                // Janus.log('  -- This is a publisher/manager')
 
                 // Retrieve rooms
                 instance.sfutest.send({
@@ -178,9 +178,9 @@ class JimberJanusVideoRoom {
                     console.error('Error retrieving list of rooms: ', err)
                   },
                   success: (data) => {
-                    console.log('List of rooms: ', data.list)
+                    // console.log('List of rooms: ', data.list)
                     if (data.list.some(room => room.room === instance.tmpId)) {
-                      console.log('ROOM EXISTS')
+                      // console.log('ROOM EXISTS')
 
                       var username = 'SingleCore'
 
@@ -194,15 +194,15 @@ class JimberJanusVideoRoom {
                       instance.sfutest.send({
                         'message': register,
                         error: (err) => {
-                          console.log('Error joining room: ', err)
+                          // console.log('Error joining room: ', err)
                         },
                         success: (data) => {
-                          console.log('Success join room: ', data)
+                          // console.log('Success join room: ', data)
                         }
                       })
                     } else {
-                      console.log('ROOM DOESNT EXIST, WE NEED TO CREATE IT!')
-                      console.log('Attempting to create: ', instance.tmpId)
+                      // console.log('ROOM DOESNT EXIST, WE NEED TO CREATE IT!')
+                      // console.log('Attempting to create: ', instance.tmpId)
 
                       instance.sfutest.send({
                         message: {
@@ -212,10 +212,10 @@ class JimberJanusVideoRoom {
                           'is_private': false
                         },
                         error: (err) => {
-                          console.log('Error creating room: ', err)
+                          // console.log('Error creating room: ', err)
                         },
                         success: (data) => {
-                          console.log('Success creating room: ', data)
+                          // console.log('Success creating room: ', data)
 
                           var username = 'SingleCore'
 
@@ -239,37 +239,37 @@ class JimberJanusVideoRoom {
                 Janus.error('  -- Error attaching plugin...', error)
               },
               consentDialog: function (on) {
-                Janus.debug('Consent dialog should be ' + (on ? 'on' : 'off') + ' now')
+                // Janus.debug('Consent dialog should be ' + (on ? 'on' : 'off') + ' now')
               },
               mediaState: function (medium, on) {
-                Janus.log('Janus ' + (on ? 'started' : 'stopped') + ' receiving our ' + medium)
+                // Janus.log('Janus ' + (on ? 'started' : 'stopped') + ' receiving our ' + medium)
               },
               webrtcState: function (on) {
-                Janus.log('Janus says our WebRTC PeerConnection is ' + (on ? 'up' : 'down') + ' now')
+                // Janus.log('Janus says our WebRTC PeerConnection is ' + (on ? 'up' : 'down') + ' now')
               },
               onmessage: function (msg, jsep) {
-                Janus.debug(' ::: Got a message (publisher) :::')
-                Janus.debug(msg)
+                // Janus.debug(' ::: Got a message (publisher) :::')
+                // Janus.debug(msg)
                 var event = msg['videoroom']
-                Janus.debug('Event: ' + event)
+                // Janus.debug('Event: ' + event)
                 if (event !== undefined && event != null) {
                   if (event === 'joined') {
                     // Publisher/manager created, negotiate WebRTC and attach to existing feeds, if any
                     instance.myid = msg['id']
                     instance.mypvtid = msg['private_id']
-                    Janus.log('Successfully joined room ' + msg['room'] + ' with ID ' + instance.myid)
+                    // Janus.log('Successfully joined room ' + msg['room'] + ' with ID ' + instance.myid)
                     instance.publishOwnFeed(true)
                     // Any new feed to attach to?
                     if (msg['publishers'] !== undefined && msg['publishers'] !== null) {
                       var list = msg['publishers']
-                      Janus.debug('Got a list of available publishers/feeds:')
-                      Janus.debug(list)
+                      // Janus.debug('Got a list of available publishers/feeds:')
+                      // Janus.debug(list)
                       for (var f in list) {
                         var id = list[f]['id']
                         var display = list[f]['display']
                         var audio = list[f]['audio_codec']
                         var video = list[f]['video_codec']
-                        Janus.debug('  >> [' + id + '] ' + display + ' (audio: ' + audio + ', video: ' + video + ')')
+                        // Janus.debug('  >> [' + id + '] ' + display + ' (audio: ' + audio + ', video: ' + video + ')')
                         instance.newRemoteFeed(id, display, audio, video)
                       }
                     }
@@ -280,20 +280,20 @@ class JimberJanusVideoRoom {
                     // Any new feed to attach to?
                     if (msg['publishers'] !== undefined && msg['publishers'] !== null) {
                       let list = msg['publishers']
-                      Janus.debug('Got a list of available publishers/feeds:')
-                      Janus.debug(list)
+                      // Janus.debug('Got a list of available publishers/feeds:')
+                      // Janus.debug(list)
                       for (let f in list) {
                         let id = list[f]['id']
                         let display = list[f]['display']
                         let audio = list[f]['audio_codec']
                         let video = list[f]['video_codec']
-                        Janus.debug('  >> [' + id + '] ' + display + ' (audio: ' + audio + ', video: ' + video + ')')
+                        // Janus.debug('  >> [' + id + '] ' + display + ' (audio: ' + audio + ', video: ' + video + ')')
                         instance.newRemoteFeed(id, display, audio, video)
                       }
                     } else if (msg['leaving'] !== undefined && msg['leaving'] !== null) {
                       // One of the publishers has gone away?
                       var leaving = msg['leaving']
-                      Janus.log('Publisher left: ' + leaving)
+                      // Janus.log('Publisher left: ' + leaving)
                       var remoteFeed = null
                       for (var i = 1; i < 6; i++) {
                         if (instance.feeds[i] != null && instance.feeds[i] !== undefined && instance.feeds[i].rfid === leaving) {
@@ -302,7 +302,7 @@ class JimberJanusVideoRoom {
                         }
                       }
                       if (remoteFeed != null) {
-                        Janus.debug('Feed ' + remoteFeed.rfid + ' (' + remoteFeed.rfdisplay + ') has left the room, detaching')
+                        // Janus.debug('Feed ' + remoteFeed.rfid + ' (' + remoteFeed.rfdisplay + ') has left the room, detaching')
                         // $('#remote'+remoteFeed.rfindex).empty().hide();
                         // $('#videoremote'+remoteFeed.rfindex).empty();
                         instance.feeds[remoteFeed.rfindex] = null
@@ -311,7 +311,7 @@ class JimberJanusVideoRoom {
                     } else if (msg['unpublished'] !== undefined && msg['unpublished'] !== null) {
                       // One of the publishers has unpublished?
                       var unpublished = msg['unpublished']
-                      Janus.log('Publisher left: ' + unpublished)
+                      // Janus.log('Publisher left: ' + unpublished)
                       if (unpublished === 'ok') {
                         // That's us
                         instance.sfutest.hangup()
@@ -325,7 +325,7 @@ class JimberJanusVideoRoom {
                         }
                       }
                       if (remoteFeed != null) {
-                        Janus.debug('Feed ' + remoteFeed.rfid + ' (' + remoteFeed.rfdisplay + ') has left the room, detaching')
+                        // Janus.debug('Feed ' + remoteFeed.rfid + ' (' + remoteFeed.rfdisplay + ') has left the room, detaching')
                         // $('#remote'+remoteFeed.rfindex).empty().hide();
                         // $('#videoremote'+remoteFeed.rfindex).empty();
                         instance.feeds[remoteFeed.rfindex] = null
@@ -335,8 +335,8 @@ class JimberJanusVideoRoom {
                   }
                 }
                 if (jsep !== undefined && jsep !== null) {
-                  Janus.debug('Handling SDP as well...')
-                  Janus.debug(jsep)
+                  // Janus.debug('Handling SDP as well...')
+                  // Janus.debug(jsep)
                   instance.sfutest.handleRemoteJsep({
                     jsep: jsep
                   })
@@ -356,13 +356,15 @@ class JimberJanusVideoRoom {
                 }
               },
               onlocalstream: function (stream) {
-                Janus.debug(' ::: Got a local stream :::')
+                // Janus.debug(' ::: Got a local stream :::')
                 instance.mystream = stream
-                Janus.debug(stream)
+                // Janus.debug(stream)
 
-                Janus.attachMediaStream(document.getElementById('myvideo'), stream)
-
-                // $("#myvideo").get(0).muted = "muted";
+                var video = document.createElement('video')
+                video.id = stream.idd
+                video.setAttribute('autoplay', 'true')
+                document.getElementById('videos').prepend(video)
+                Janus.attachMediaStream(video, stream)
 
                 if (instance.sfutest.webrtcStuff.pc.iceConnectionState !== 'completed' &&
                 instance.sfutest.webrtcStuff.pc.iceConnectionState !== 'connected') {}
@@ -371,10 +373,10 @@ class JimberJanusVideoRoom {
                 // The publisher stream is sendonly, we don't expect anything here
               },
               oncleanup: function () {
-                Janus.log(' ::: Got a cleanup notification: we are unpublished now :::')
+                // Janus.log(' ::: Got a cleanup notification: we are unpublished now :::')
                 instance.mystream = null
                 // document.getElementById('participant1').srcObject = null
-                console.log('Cleaning old video object ... ')
+                // console.log('Cleaning old video object ... ')
                 // $('#videolocal').html('<button id="publish" class="btn btn-primary">Publish</button>');
                 // $('#publish').click(function() { publishOwnFeed(true); });
                 // $("#videolocal").parent().parent().unblock();
@@ -384,11 +386,11 @@ class JimberJanusVideoRoom {
             })
           },
           error: function (error) {
-            console.log('janus Error')
-            console.log(error)
+            // console.log('janus Error')
+            // console.log(error)
           },
           destroyed: function () {
-            console.log('janus destroyed')
+            // console.log('janus destroyed')
           }
         })
       }
@@ -406,8 +408,8 @@ class JimberJanusVideoRoom {
       simulcast: instance.doSimulcast,
       simulcast2: instance.doSimulcast2,
       success: function (jsep) {
-        Janus.debug('Got publisher SDP!')
-        Janus.debug(jsep)
+        // Janus.debug('Got publisher SDP!')
+        // Janus.debug(jsep)
 
         var publish = {
           'request': 'configure',
@@ -437,8 +439,8 @@ class JimberJanusVideoRoom {
       success: function (pluginHandle) {
         remoteFeed = pluginHandle
         remoteFeed.simulcastStarted = false
-        Janus.log('Plugin attached! (' + remoteFeed.getPlugin() + ', id=' + remoteFeed.getId() + ')')
-        Janus.log('  -- This is a subscriber')
+        // Janus.log('Plugin attached! (' + remoteFeed.getPlugin() + ', id=' + remoteFeed.getId() + ')')
+        // Janus.log('  -- This is a subscriber')
         // We wait for the plugin to send us an offer
         var subscribe = {
           'request': 'join',
@@ -463,10 +465,10 @@ class JimberJanusVideoRoom {
         Janus.error('  -- Error attaching plugin...', error)
       },
       onmessage: function (msg, jsep) {
-        Janus.debug(' ::: Got a message (subscriber) :::')
-        Janus.debug(msg)
+        // Janus.debug(' ::: Got a message (subscriber) :::')
+        // Janus.debug(msg)
         var event = msg['videoroom']
-        Janus.debug('Event: ' + event)
+        // Janus.debug('Event: ' + event)
         if (msg['error'] !== undefined && msg['error'] !== null) {
           // bootbox.alert(msg['error'])
         } else if (event !== undefined && event != null) {
@@ -481,7 +483,7 @@ class JimberJanusVideoRoom {
             }
             remoteFeed.rfid = msg['id']
             remoteFeed.rfdisplay = msg['display']
-            Janus.log('Successfully attached to feed ' + remoteFeed.rfid + ' (' + remoteFeed.rfdisplay + ') in room ' + msg['room'])
+            // Janus.log('Successfully attached to feed ' + remoteFeed.rfid + ' (' + remoteFeed.rfdisplay + ') in room ' + msg['room'])
           } else if (event === 'event') {
             // Check if we got an event on a simulcast-related event from this publisher
             var substream = msg['substream']
@@ -496,8 +498,8 @@ class JimberJanusVideoRoom {
           }
         }
         if (jsep !== undefined && jsep !== null) {
-          Janus.debug('Handling SDP as well...')
-          Janus.debug(jsep)
+          // Janus.debug('Handling SDP as well...')
+          // Janus.debug(jsep)
           // Answer and attach
           remoteFeed.createAnswer({
             jsep: jsep,
@@ -508,8 +510,8 @@ class JimberJanusVideoRoom {
               videoSend: false
             }, // We want recvonly audio/video
             success: function (jsep) {
-              Janus.debug('Got SDP!')
-              Janus.debug(jsep)
+              // Janus.debug('Got SDP!')
+              // Janus.debug(jsep)
               var body = {
                 'request': 'start',
                 'room': instance.tmpId
@@ -527,39 +529,47 @@ class JimberJanusVideoRoom {
         }
       },
       webrtcState: function (on) {
-        Janus.log('Janus says this WebRTC PeerConnection (feed #' + remoteFeed.rfindex + ') is ' + (on ? 'up' : 'down') + ' now')
+        // Janus.log('Janus says this WebRTC PeerConnection (feed #' + remoteFeed.rfindex + ') is ' + (on ? 'up' : 'down') + ' now')
       },
       onlocalstream: function (stream) {
         // The subscriber stream is recvonly, we don't expect anything here
       },
       onremotestream: function (stream) {
-        Janus.debug('Remote feed #' + remoteFeed.rfindex)
+        // Janus.debug('Remote feed #' + remoteFeed.rfindex)
+        // console.log('Remote feed #' + remoteFeed.rfindex)
+        console.log('Incomming onremotestream !!!! !!!!')
+        console.log(stream)
+        console.log(remoteFeed)
+        // console.log('@@@ Attaching media stream ... ', stream)
+        // console.log('streamstreamstreamstreamstreamstreamstreamstreamstream')
+        // console.log(stream)
+        if (document.getElementById(remoteFeed.id) === null) {
+          console.log('Attachting remoteFeed.id : ' + remoteFeed.id + '.')
+          let video = document.createElement('video')
+          video.id = remoteFeed.id
+          video.setAttribute('autoplay', 'true')
+          document.getElementById('videos').appendChild(video)
+          Janus.attachMediaStream(video, stream)
+        } else {
+          console.log('remoteFeed.id : ' + remoteFeed.id + ' has already been attached.')
 
-        console.log('@@@ Attaching media stream ... ', stream)
-
-        let participant = document.getElementById('participant1')
-        participant.removeAttribute('hidden')
-        Janus.attachMediaStream(participant, stream)
-
-        // for (let participantIndex = 1; participantIndex <= 10; participantIndex++) {
-        //   let participant = document.getElementById('participant' + participantIndex)
-
-        //   if (participant.srcObject == null) {
-        //     participant.removeAttribute('hidden')
-        //     Janus.attachMediaStream(participant, stream)
-
-        //     instance.participants.push({
-        //       id: id,
-        //       participantIndex: participantIndex
-        //     })
-        //     break
-        //   }
-        // }
+          let video = document.getElementById(remoteFeed.id)
+          Janus.attachMediaStream(video, stream)
+        }
+        // let participant = document.getElementById('participant1')
+        // participant.removeAttribute('hidden')
+        // Janus.attachMediaStream(participant, stream)
+        // console.log('Atteching media stream onremotestream .... ')
+        // console.log(stream.id, remoteFeed.rfindex)
       },
       oncleanup: function () {
-        Janus.log(' ::: Got a cleanup notification (remote feed ' + id + ') :::')
+        // Janus.log(' ::: Got a cleanup notification (remote feed ' + id + ') :::')
 
-        document.getElementById('participant1').srcObject = null
+        console.log(remoteFeed)
+        document.getElementById(remoteFeed.id).remove()
+        remoteFeed.mystream = null
+        // mystream = null;
+        // document.getElementById('participant1').srcObject = null
 
         // instance.participants.filter(participant => participant.id === id).srcObject = null
 
