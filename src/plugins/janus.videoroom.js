@@ -1,4 +1,5 @@
 import Janus from './janus'
+import Config from '../../public/config'
 
 let instance = null
 
@@ -21,9 +22,9 @@ class JimberJanusVideoRoom {
       instance.server = null
 
       if (window.location.protocol === 'http:') {
-        instance.server = 'http://' + window.location.hostname + ':8088/janus'
+        instance.server = Config.janusUrl
       } else {
-        instance.server = 'https://' + window.location.hostname + ':8089/janus'
+        instance.server = Config.janusUrl
       }
 
       instance.janus = null
@@ -154,7 +155,7 @@ class JimberJanusVideoRoom {
       debug: 'all',
       callback: function () {
         instance.janus = new Janus({
-          server: 'http://localhost:8088/janus',
+          server: Config.janusUrl,
           success: function () {
             // console.log('janus success')
 
