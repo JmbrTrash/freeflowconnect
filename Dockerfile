@@ -5,6 +5,7 @@ WORKDIR /build_app
 
 # Copy the package and package-lock.json
 COPY package*.json ./
+COPY yarn.lock ./
 
 # FontAwesome licencing. 
 RUN npm config set "@fortawesome:registry" https://npm.fontawesome.com/
