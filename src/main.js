@@ -3,18 +3,18 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
+import Config from '../public/config'
 
 import VueSocketIO from 'vue-socket.io'
 
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: 'http://localhost:3000/rooms-ws',
+  connection: Config.apiUrl + '/rooms-ws',
   vuex: {
     store,
     actionPrefix: 'SOCKET_',
     mutationPrefix: 'SOCKET_'
   }
-  // options: { path: "rooms-ws" } //Optional options
 }))
 
 Vue.config.productionTip = false
